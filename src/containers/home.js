@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { Container, Content, CardItem, Button , Textarea} from 'native-base';
-import img from '../images/2.jpg';
+import img from '../images/screen.png';
 import logo from '../images/emlogo.png';
 
 const { width, height } = Dimensions.get("window");
@@ -12,13 +12,13 @@ export default class App extends Component {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
-                <Container style={[styles.container, {backgroundColor:'linear-gradient(135deg, rgba(217,30,24,0.9) 0%, rgba(255,102,0,0.9) 100%)', }]} >
-                    <Image style={[styles.pic, {opacity: .2}]} source={img} /> 
+                <Container style={[styles.container, {}]} >
+                    <Image style={[styles.pic, {}]} source={img} /> 
                 </Container>
-                <Container style={{ position: 'absolute', flex: 1, }}>
-                    <Container style={{ flex: 1, justifyContent: 'center'}} >
+                <Container style={{ position: 'absolute', flex: 1,}}>
+                    <Container style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: '35%',}} >
                         {/* <Image style={{ width: '80%', height: '20%',marginLeft:'10%', marginRight: '10%' }} source={logo} /> */}
-                        <Text style={{color:'white', justifyContent: 'center', alignSelf:'center', fontSize: 30, fontWeight: 'bold',}} >
+                        <Text style={{color:'white',fontFamily: 'Ubuntu-M', alignSelf:'center', fontSize: 29, }} >
                             fitnessconnect.solutions
                         </Text>
                     </Container>
@@ -27,7 +27,7 @@ export default class App extends Component {
                             <Text style={{ color: 'red', fontWeight: 'bold' }} >SIGN UP</Text>
                         </Button>
                         <TouchableOpacity onPress={() => navigate('Login')} style={{ justifyContent: 'center', alignItems: 'center',marginTop: '5%' }} >
-                            <Text style={{ color: 'white' }} >ALREADY A MEMBER? LOGIN</Text>
+                            <Text style={{ fontFamily: 'Ubuntu-M', color: 'white', }} >ALREADY A MEMBER? LOGIN</Text>
                         </TouchableOpacity>
 
                     </Container>

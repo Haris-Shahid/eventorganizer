@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity, ToastAndroid, } from 'react-native';
 import { Container, Content, CardItem, Button, Item, Label, Input, Form, } from 'native-base';
+import * as firebase from 'firebase' ;
 
 const { width, height } = Dimensions.get("window");
 export default class SignUp extends Component {
     static navigationOptions = {
         title: 'Sign Up',
         headerStyle: { backgroundColor: '#ca313a' },
-        headerTitleStyle: { color: 'white', alignSelf: 'center' },
+        headerTitleStyle: { color: 'white', alignSelf: 'center', },
         headerTintColor: 'white',
         headerLeft: null,
     };
@@ -45,8 +46,27 @@ export default class SignUp extends Component {
             alert("Your Password is Too Short")
         }else{
             let userdetail = { fname, lname, email, pass, pass1}
-            ToastAndroid.show('Account Created.', ToastAndroid.SHORT);
-            navigate('Login', userdetail);
+            firebase.auth().createUserWithEmailAndPassword( email, pass )
+            .then((user) => {
+                let firebaseData = {
+                    name: fname ,
+                    lname,
+                    email: email,
+                    pass: pass,
+                    id: user.uid
+                };
+                firebase.database().ref('FamilyTracker/'+ user.uid).set(firebaseData)
+                    .then(() => {
+                        ToastAndroid.show(`Welcome ${ fname } ${ lname }`, ToastAndroid.SHORT);
+                        navigate('Dashboard');
+                        // navigate('Login');
+                        // navigate('Login', userdetail);
+                    });
+            })
+            .catch((error) => {
+                var errorMessage = error.message;
+                alert( errorMessage )
+            })
         }
     }
 
@@ -55,29 +75,29 @@ export default class SignUp extends Component {
         return (
             <Container style={styles.container} >
                 <Content>
-                    <Form style={{ paddingTop: '3%', width: '95%', }} >
-                        <Item floatingLabel style={{ borderBottomColor: '#2c3e50' }}>
+                    <Form style={{ paddingTop: '3%', width: '94%', marginHorizontal: '3%'  }} >
+                        <Item floatingLabel style={{ marginHorizontal: '4%' ,borderBottomColor: '#2c3e50' }}>
                             <Label style={{ color: '#2c3e50' }} >First Name</Label>
                             <Input onChangeText={(fname)=> this.setState({fname})} value={fname} style={{ color: '#ca313a' }} type="text" />
                         </Item>
-                        <Item floatingLabel style={{ borderBottomColor: '#2c3e50' }}>
+                        <Item floatingLabel style={{ marginHorizontal: '4%', borderBottomColor: '#2c3e50' }}>
                             <Label style={{ color: '#2c3e50' }} >Last Name</Label>
                             <Input onChangeText={(lname)=> this.setState({lname})} value={lname} style={{ color: '#ca313a' }} type="text" />
                         </Item>
-                        <Item floatingLabel style={{ borderBottomColor: '#2c3e50' }}>
+                        <Item floatingLabel style={{ marginHorizontal: '4%', borderBottomColor: '#2c3e50' }}>
                             <Label style={{ color: '#2c3e50' }} >Email</Label>
                             <Input onChangeText={(email)=> this.setState({email})} value={email} style={{ color: '#ca313a' }} type="text" />
                         </Item>
-                        <Item floatingLabel style={{ borderBottomColor: '#2c3e50' }}>
+                        <Item floatingLabel style={{ marginHorizontal: '4%', borderBottomColor: '#2c3e50' }}>
                             <Label style={{ color: '#2c3e50' }} >Password</Label>
                             <Input onChangeText={(pass)=> this.setState({pass})} value={pass} style={{ color: '#ca313a' }} type="text" secureTextEntry={true} />
                         </Item>
-                        <Item floatingLabel style={{ borderBottomColor: '#2c3e50' }}>
+                        <Item floatingLabel style={{ marginHorizontal: '4%', borderBottomColor: '#2c3e50' }}>
                             <Label style={{ color: '#2c3e50' }} >Retype Password</Label>
                             <Input onChangeText={(pass1)=> this.setState({pass1})} value={pass1} style={{ color: '#ca313a' }} type="text" secureTextEntry={true} />
                         </Item>
-                        <Item style={{ borderBottomColor: 'white', justifyContent: 'center' }} >
-                            <Button onPress={ this.validateSignup.bind(this) } style={{ borderRadius: 5, width: '95%', alignSelf: 'center', justifyContent: 'center', marginTop: '5%', backgroundColor: '#2c3e50' }} >
+                        <Item style={{ marginHorizontal: '4%', borderBottomColor: 'white', justifyContent: 'center' }} >
+                            <Button onPress={ this.validateSignup.bind(this) } style={{ borderRadius: 5, width: '100%',justifyContent: 'center', marginTop: '5%', backgroundColor: '#2c3e50' }} >
                                 <Text style={{ color: 'white', fontWeight: 'bold' }} >SIGN UP</Text>
                             </Button>
                         </Item>
